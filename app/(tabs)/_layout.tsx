@@ -7,23 +7,67 @@ import LearnScreen from '../screens/Learn';
 import MissionsScreen from '../screens/Missions';
 import ContributeScreen from '../screens/Contribute';
 import BuyScreen from '../screens/Buy';
-import CommunityScreen from '../screens/Community';
+import CommunityStack from '../navigation/CommunityStack';
 import MyProfileScreen from '../screens/MyProfile';
 import Login from '../screens/Login';
+import AddPost from '../screens/AddPost';
+import Post from '../screens/Post';
+import Icon from 'react-native-vector-icons/Ionicons'; // Import the icon set you want to use
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Learn" component={LearnScreen} options={{ headerShown: false }}/>
-      <Tab.Screen name="Missions" component={MissionsScreen} options={{ headerShown: false }}/>
-      <Tab.Screen name="Contribute" component={ContributeScreen} options={{ headerShown: false }}/>
-      <Tab.Screen name="Buy" component={BuyScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Community" component={CommunityScreen} options={{ headerShown: false }}/>
-      <Tab.Screen name="MyProfile" component={MyProfileScreen} options={{ headerShown: false }}/>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case 'Home':
+              iconName = focused ? 'home' : 'home-outline';
+              break;
+            case 'Learn':
+              iconName = focused ? 'book' : 'book-outline';
+              break;
+            case 'Missions':
+              iconName = focused ? 'planet' : 'planet-outline';
+              break;
+            case 'Contribute':
+              iconName = focused ? 'hand-heart' : 'hand-heart-outline';
+              break;
+            case 'Buy':
+              iconName = focused ? 'cart' : 'cart-outline';
+              break;
+            case 'Community':
+              iconName = focused ? 'people' : 'people-outline';
+              break;
+            case 'MyProfile':
+              iconName = focused ? 'person' : 'person-outline';
+              break;
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          backgroundColor: '#d4f7d6', // Light green background color
+        },
+        headerShown: false
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Learn" component={LearnScreen} />
+      <Tab.Screen name="Missions" component={MissionsScreen} />
+      <Tab.Screen name="Contribute" component={ContributeScreen} />
+      <Tab.Screen name="Buy" component={BuyScreen} />
+      <Tab.Screen name="Community" component={CommunityStack} />
+      <Tab.Screen name="MyProfile" component={MyProfileScreen} />
+      {/* <Tab.Screen name="AddPost" component={AddPost} />
+      <Tab.Screen name="Post" component={Post} /> */}
+
     </Tab.Navigator>
   );
 }

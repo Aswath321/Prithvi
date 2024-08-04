@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "app/screens/posts.js", "app/screens/Post.js", "app/screens/Community.js", "app/screens/AddPost.js"  ]
 }

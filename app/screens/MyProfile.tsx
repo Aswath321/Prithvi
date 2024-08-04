@@ -89,7 +89,7 @@ const MyProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#639cf2',
+    backgroundColor: '#bce6c8',
     alignItems: 'center',
     padding: 20,
   },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerTitle: {
-    color: '#031838',
+    color: '#073815',
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerOption: {
-    color: '#031838',
+    color: '#073815',
     marginLeft: 15,
     fontSize: 16,
   },
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
     borderRadius: 12,
-    backgroundColor: '#bdd2f2',
+    backgroundColor: '#6aba81',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: '#031838', // Green border for profile picture
+    borderColor: 'black', // Green border for profile picture
     marginBottom: 16,
   },
   name: {
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 14,
-    color: '#999',
+    color: 'black',
     marginBottom: 8,
   },
   rating: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#425a7d',
+    backgroundColor: '#145c28',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
   },
   workAddress: {
     fontSize: 12,
-    color: '#999',
+    color: '#0d421c',
     marginBottom: 4,
   },
   primaryWork: {
     fontSize: 12,
-    color: '#2057a8',
+    color: '#145c28',
   },
 });
 

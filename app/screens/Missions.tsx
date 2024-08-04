@@ -81,7 +81,7 @@ const Missions = () => {
         if (daysLeft >= 0) {
           return { ...mission, coins: mission.coins + 10, lastUploadDate: today }; // Update last upload date
         } else {
-          alert('You can only upload a photo every 10 days.');
+          alert('You have uploaded the photo.Try again later');
         }
       }
       return mission;
@@ -101,16 +101,34 @@ const Missions = () => {
     }
   };
 
+  const today = moment().format('YYYY-MM-DD');
+
   return (
     <ScrollView style={styles.container}>
-      <Calendar
-        current={selectedDate}
-        onDayPress={handleDateChange}
-        markedDates={{
-          [selectedDate]: { selected: true, selectedColor: 'blue' },
-        }}
-        style={styles.calendar}
-      />
+      <View style={styles.calendarContainer}>
+        <Calendar
+          current={selectedDate}
+          onDayPress={handleDateChange}
+          markedDates={{
+            [selectedDate]: { selected: true, selectedColor: '#94e0aa' },
+            [today]: { selected: true, selectedColor: '#166e2f' }, // Mark today in a different color
+          }}
+          theme={{
+            backgroundColor: '#e0f7e0',
+            calendarBackground: '#e0f7e0',
+            textSectionTitleColor: '#007300',
+            selectedDayBackgroundColor: '#007300',
+            selectedDayTextColor: '#ffffff',
+            todayTextColor: '#007300',
+            dayTextColor: '#007300',
+            textDisabledColor: '#d9e1e8',
+            arrowColor: '#007300',
+            monthTextColor: '#007300',
+            indicatorColor: '#007300',
+          }}
+          style={styles.calendar}
+        />
+      </View>
       <Text style={styles.totalCoins}>Total Coins: {totalCoins}</Text>
       
       <Text style={styles.sectionTitle}>Enrolled Missions</Text>
@@ -132,7 +150,7 @@ const Missions = () => {
                       style={styles.input}
                       placeholder="Enter photo URI"
                     />
-                    <Button title="Submit Photo" onPress={() => handlePhotoSubmit(item.id)} />
+                    <Button color='#72ba86' title="Submit Photo" onPress={() => handlePhotoSubmit(item.id)} />
                   </>
                 ) : (
                   <Text style={styles.disabled}>You can only upload a photo every 10 days.</Text>
@@ -170,29 +188,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#639cf2',
+    backgroundColor: '#e0f7e0',
+  },
+  calendarContainer: {
+    backgroundColor: '#c1e8cc',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 20,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   calendar: {
-    marginBottom: 20,
+    borderRadius: 10,
   },
   totalCoins: {
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
-    color: '#031838',
+    color: '#007300',
   },
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     marginVertical: 10,
-    color: '#031838',
+    color: '#007300',
   },
   missionBox: {
     marginBottom: 20,
     padding: 15,
-    backgroundColor: '#bdd2f2',
+    backgroundColor: '#c1e8cc',
     borderRadius: 8,
-    borderColor: '#ddd',
+    borderColor: 'black',
     borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -203,7 +229,7 @@ const styles = StyleSheet.create({
   missionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#031838',
+    color: '#007300',
   },
   description: {
     marginVertical: 10,
@@ -215,7 +241,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: 'blue',
+    borderColor: '#007300',
     borderRadius: 5,
     padding: 10,
     marginVertical: 10,
@@ -228,7 +254,7 @@ const styles = StyleSheet.create({
   checkProgressButton: {
     marginTop: 15,
     padding: 10,
-    backgroundColor: '#031838',
+    backgroundColor: '#007300',
     borderRadius: 5,
     alignItems: 'center',
   },
@@ -239,7 +265,7 @@ const styles = StyleSheet.create({
   enrollButton: {
     marginTop: 15,
     padding: 10,
-    backgroundColor: '#031838',
+    backgroundColor: '#007300',
     borderRadius: 5,
     alignItems: 'center',
   },

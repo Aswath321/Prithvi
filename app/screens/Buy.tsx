@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay'; // Import Razorpay
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icons from React Native Vector Icons
 
 // Sample product data
 const products = [
@@ -11,7 +12,6 @@ const products = [
 
 const Buy = () => {
   const [cart, setCart] = useState([]);
-  const [quantity, setQuantity] = useState({});
 
   const addToCart = (product, quantity) => {
     setCart(prevCart => {
@@ -28,39 +28,41 @@ const Buy = () => {
   };
 
   const incrementQuantity = (product) => {
-    setQuantity(prevQuantity => ({
-      ...prevQuantity,
-      [product.id]: (prevQuantity[product.id] || 0) + 1,
-    }));
+    setCart(prevCart => {
+      return prevCart.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    });
   };
 
   const decrementQuantity = (product) => {
-    setQuantity(prevQuantity => {
-      const currentQuantity = prevQuantity[product.id] || 0;
-      if (currentQuantity > 1) {
-        return {
-          ...prevQuantity,
-          [product.id]: currentQuantity - 1,
-        };
+    setCart(prevCart => {
+      const existingProduct = prevCart.find(item => item.id === product.id);
+      if (existingProduct && existingProduct.quantity > 1) {
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
       }
-      const { [product.id]: _, ...rest } = prevQuantity;
-      return rest;
+      return prevCart;
     });
   };
 
   const handleCheckout = () => {
     const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    console.log(totalAmount);
 
     const options = {
       description: 'Purchase of green products',
       currency: 'INR',
-      key: 'rzp_test_oykxxXHC4cpQ84', // Replace with your Razorpay key ID
+      key: 'YOUR_RAZORPAY_KEY_ID', // Replace with your Razorpay key ID
       amount: totalAmount * 100, // Amount in paise (convert from INR)
       name: 'Green Fintech App',
       prefill: {
         email: 'aswath2111001@ssn.edu.in', // Replace with actual user email
-        contact: '7010348134', // Replace with actual user contact number
+        contact: '1234567890', // Replace with actual user contact number
       },
     };
 
@@ -72,97 +74,118 @@ const Buy = () => {
         setCart([]);
       })
       .catch((error) => {
-        console.error('Payment failed:', error); // Log the error for debugging
-        Alert.alert('Error', `Payment failed! ${error.description || error}`);
+        // Handle failure
+        Alert.alert('Error', `Payment failed! ${error.description}`);
       });
   };
 
   const viewCart = () => {
-    Alert.alert('Cart Contents', cart.map(item => `${item.name}: ${item.quantity} x ₹${item.price.toFixed(2)}`).join('\n'));
+    Alert.alert('Cart', cart.map(item => `${item.name} x ${item.quantity}`).join('\n'));
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <Button title="View Cart" onPress={viewCart} disabled={cart.length === 0} color="#004d00" />
       <FlatList
         data={products}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <View style={styles.productBox}>
-            <Text style={styles.productTitle}>{item.name}</Text>
-            <Text style={styles.productPrice}>₹{item.price.toFixed(2)}</Text>
+          <View style={styles.productContainer}>
+            <View style={styles.iconContainer}>
+              <Icon name="shopping-cart" size={24} color="#4caf50" />
+            </View>
+            <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+            <Text style={styles.productName}>{item.name}</Text>
+            <TouchableOpacity 
+              style={styles.addToCartButton}
+              onPress={() => addToCart(item, (cart.find(i => i.id === item.id)?.quantity || 0) + 1)}
+            >
+              <Text style={styles.buttonText}>Add to Cart</Text>
+            </TouchableOpacity>
             <View style={styles.quantityContainer}>
               <TouchableOpacity 
-                style={styles.quantityButton}
+                style={styles.adjustButton}
                 onPress={() => decrementQuantity(item)}
               >
-                <Text style={styles.quantityButtonText}>-</Text>
+                <Text style={styles.adjustButtonText}>-</Text>
               </TouchableOpacity>
-              <Text style={styles.quantity}>{quantity[item.id] || 0}</Text>
+              <Text style={styles.quantity}>{cart.find(i => i.id === item.id)?.quantity || 0}</Text>
               <TouchableOpacity 
-                style={styles.quantityButton}
+                style={styles.adjustButton}
                 onPress={() => incrementQuantity(item)}
               >
-                <Text style={styles.quantityButtonText}>+</Text>
+                <Text style={styles.adjustButtonText}>+</Text>
               </TouchableOpacity>
             </View>
-            <Button
-              title="Add to Cart"
-              onPress={() => addToCart(item, (quantity[item.id] || 0) + 1)}
-              color="#031838"
-            />
           </View>
         )}
       />
-      <View style={styles.buttonsContainer}>
-        <Button title="Checkout" onPress={handleCheckout} disabled={cart.length === 0} color="#031838" />
-        <View style={styles.buttonSpacer} />
-        <Button title="View Cart" onPress={viewCart} color="#031838" />
-      </View>
-    </ScrollView>
+      <Button title="Checkout" onPress={handleCheckout} disabled={cart.length === 0} color="#004d00" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#639cf2',
+    padding: 16,
+    backgroundColor: '#96d4a8',
   },
-  productBox: {
-    backgroundColor: '#bdd2f2',
-    padding: 15,
+  productContainer: {
+    backgroundColor: '#d1edd9',
+    borderColor: 'black',
+    padding: 16,
     borderRadius: 8,
-    marginBottom: 15,
-    borderColor: '#031838',
-    borderWidth: 1,
-    shadowColor: '#031838',
+    marginBottom: 12,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  productTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#031838',
+  iconContainer: {
+    marginBottom: 8,
   },
   productPrice: {
+    fontSize: 16,
+    color: 'black', // Black color for product price
+    marginBottom: 4,
+  },
+  productName: {
     fontSize: 18,
-    color: '#031838',
-    marginVertical: 8,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  addToCartButton: {
+    backgroundColor: '#2e8c49',
+    borderRadius: 4,
+    padding: 12,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 8,
+    borderColor: 'black',
+    borderWidth: 1,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginTop: 8,
   },
-  quantityButton: {
-    backgroundColor: '#031838',
+  adjustButton: {
+    backgroundColor: '#4caf50',
     borderRadius: 4,
     padding: 8,
     marginHorizontal: 4,
+    borderColor: 'black',
+    borderWidth: 1,
   },
-  quantityButtonText: {
+  adjustButtonText: {
     color: '#fff',
     fontSize: 18,
   },
@@ -170,12 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     width: 40,
     textAlign: 'center',
-  },
-  buttonsContainer: {
-    marginTop: 20,
-  },
-  buttonSpacer: {
-    height: 10, // Adjust the height to control the space between buttons
   },
 });
 
